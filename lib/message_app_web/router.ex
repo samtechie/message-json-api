@@ -18,6 +18,7 @@ defmodule MessageAppWeb.Router do
   scope "/api", MessageAppWeb do
     pipe_through [:api, :api_auth]
     resources "/users", UserController, except: [:new, :edit]
+    resources "/messages", MessageController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development
