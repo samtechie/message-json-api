@@ -54,7 +54,6 @@ defmodule MessageApp.AccountTest do
       assert user.email == "some updated email"
       assert user.is_active == false
       assert Bcrypt.verify_pass("some updated password", user.password_hash)
-
     end
 
     test "update_user/2 with invalid data returns error changeset" do
@@ -72,6 +71,17 @@ defmodule MessageApp.AccountTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Account.change_user(user)
+    end
+
+    test "authenticate_user/2 authenticates the user" do
+      user = user_without_password()
+
+      assert {:error, "Wrong email or password"} = Account.authenticate_user("wrong email", "")
+
+      assert {:ok, authenticated_user} =
+               Account.authenticate_user(user.email, @valid_attrs.password)
+
+      assert user == authenticated_user
     end
   end
 end
